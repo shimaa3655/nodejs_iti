@@ -27,5 +27,5 @@ exports.delete = [
 ]
 
 exports.changepassword=[
-    body('password').isLength({ min: 8 }).withMessage("teacher password min length 8"),
+    body('newPassword').isLength({ min: 8 }).withMessage("teacher password min length 8"),
 ];

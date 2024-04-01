@@ -92,29 +92,16 @@ exports.updateteacher = async (request, response, next) => {
     }
 };
 
-// exports.deleteteacher=(request,response,next)=>{
-//     teachreSchema.deleteOne({
-//         _id:request.params.id
-//     }).then(data=>{
-//         response.status(200).json({data});
-//     })
-//     .catch(error=>next(error));
-// }
+
 
 exports.deleteteacher = async (request, response, next) => {
     try {
         const teacherId = request.params.id;
-         console.log(teacherId);
-        // Find all classes where the teacher is a supervisor
-        const classes = await classSchema.find({ supervisor: teacherId });
-
-        // Remove the teacher from the supervisor field in each class
+        const classes = await classSchema.find({ supervisor: teacherId })
         await Promise.all(classes.map(async (classObj) => {
-            classObj.supervisor = null; // Or remove the teacher ID from the array if it's an array field
+            classObj.supervisor = null; 
             await classObj.save();
         }));
-
-        // Delete the teacher
         const result = await teachreSchema.deleteOne({ _id: teacherId });
         if (result.deletedCount === 0) {
             throw new Error("Teacher not found.");

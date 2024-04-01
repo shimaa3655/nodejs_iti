@@ -1,5 +1,6 @@
  
 const childernSchema=require("./../Model/childModel"); 
+const classSchema =require("./../Model/classModel");
 
 exports.getAllChildern=(request,response,next)=>{
     childernSchema.find()
@@ -50,14 +51,29 @@ exports.updateChild=(request,response,next)=>{
 
 
 
-exports.deleteChild=(request,response,next)=>{
+exports.deleteChild = (request, response, next) => {
+    const childId = request.body.id;
     childernSchema.deleteOne({
-        _id: request.body.id
-    }).then((data) =>{
-        if(data.deletedCount == 0)
-            new Error("Not Found")
-        else
-            response.status(200).json(data);
+        _id: childId
+    })
+    .then((data) => {
+        if (data.deletedCount === 0) {
+            throw new Error("Child not found");
+        } else {
+            return classSchema.findOneAndUpdate(
+                { children: childId },
+                { $pull: { children: childId } }, 
+                { new: true } 
+            );
+        }
+    })
+    .then((updatedClass) => {
+        if (updatedClass) {
+            response.status(200).json({ message: "Child deleted successfully and deleted from this classes", updatedClass });
+        } else {
+
+            response.status(200).json({ message: "Child deleted successfully" });
+        }
     })
     .catch((error) => next(error));
 }

@@ -12,7 +12,7 @@ const router = express.Router();
 const controller = require("./../Controller/classController");
 const validateMW = require("./../validations/validateMW");
 const classValidation = require("../validations/classValidation");
-
+const auth = require('../Middleware/auth');
 /**
  * @swagger
  * /classes:
@@ -24,7 +24,7 @@ const classValidation = require("../validations/classValidation");
  *       '200':
  *         description: A list of classes
  */
-router.get("/classes", controller.getAllClasses);
+router.get("/classes", auth.checkAdminOrTeacher,controller.getAllClasses);
 
 /**
  * @swagger
@@ -54,7 +54,7 @@ router.get("/classes", controller.getAllClasses);
  *       '400':
  *         description: Bad request
  */
-router.post("/classes", classValidation.post, validateMW, controller.addClass);
+router.post("/classes", auth.isAdmin,classValidation.post, validateMW, controller.addClass);
 
 /**
  * @swagger
@@ -76,7 +76,7 @@ router.post("/classes", classValidation.post, validateMW, controller.addClass);
  *       '404':
  *         description: Class not found
  */
-router.get("/classes/:id", classValidation.getByIdValidator, validateMW, controller.getClassById);
+router.get("/classes/:id",auth.isAdmin, classValidation.getByIdValidator, validateMW, controller.getClassById);
 
 /**
  * @swagger
@@ -108,7 +108,7 @@ router.get("/classes/:id", classValidation.getByIdValidator, validateMW, control
  *       '404':
  *         description: Class not found
  */
-router.patch("/classes", classValidation.update, validateMW, controller.updateClass);
+router.patch("/classes",auth.isAdmin, classValidation.update, validateMW, controller.updateClass);
 
 /**
  * @swagger
@@ -132,7 +132,7 @@ router.patch("/classes", classValidation.update, validateMW, controller.updateCl
  *       '404':
  *         description: Class not found
  */
-router.delete("/classes", classValidation.delete, validateMW, controller.deleteClass);
+router.delete("/classes",auth.isAdmin, classValidation.delete, validateMW, controller.deleteClass);
 
 /**
  * @swagger
@@ -154,7 +154,7 @@ router.delete("/classes", classValidation.delete, validateMW, controller.deleteC
  *       '404':
  *         description: Class not found
  */
-router.get("/classes/childern/:id", classValidation.getByIdValidator, validateMW, controller.getAllClassChildren);
+router.get("/classes/childern/:id", auth.checkAdminOrTeacher,classValidation.getByIdValidator, validateMW, controller.getAllClassChildren);
 
 /**
  * @swagger
@@ -176,6 +176,6 @@ router.get("/classes/childern/:id", classValidation.getByIdValidator, validateMW
  *       '404':
  *         description: Class not found
  */
-router.get("/classes/teachers/:id", classValidation.getByIdValidator, validateMW, controller.getAllClassSupervisorInfo);
+router.get("/classes/teachers/:id",auth.isAdmin, classValidation.getByIdValidator, validateMW, controller.getAllClassSupervisorInfo);
 
 module.exports = router;

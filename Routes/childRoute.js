@@ -9,6 +9,7 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../Controller/childController");
+const auth = require('../Middleware/auth');
 const validateMW = require("../validations/validateMW");
 const childValidation = require("../validations/childValidation");
 
@@ -23,7 +24,7 @@ const childValidation = require("../validations/childValidation");
  *       '200':
  *         description: A list of children
  */
-router.get("/childern", controller.getAllChildern);
+router.get("/childern", auth.checkAdminOrTeacher,controller.getAllChildern);
 
 /**
  * @swagger
@@ -60,7 +61,7 @@ router.get("/childern", controller.getAllChildern);
  *       '400':
  *         description: Bad request
  */
-router.post("/childern", childValidation.post, validateMW, controller.addChild);
+router.post("/childern",auth.isAdmin, childValidation.post, validateMW, controller.addChild);
 
 /**
  * @swagger
@@ -82,7 +83,7 @@ router.post("/childern", childValidation.post, validateMW, controller.addChild);
  *       '404':
  *         description: Child not found
  */
-router.get("/childern/:id", controller.getChildById);
+router.get("/childern/:id", auth.isAdmin,controller.getChildById);
 
 /**
  * @swagger
@@ -121,7 +122,7 @@ router.get("/childern/:id", controller.getChildById);
  *       '404':
  *         description: Child not found
  */
-router.patch("/childern", childValidation.update, validateMW, controller.updateChild);
+router.patch("/childern",auth.isAdmin, childValidation.update, validateMW, controller.updateChild);
 
 /**
  * @swagger
@@ -145,6 +146,6 @@ router.patch("/childern", childValidation.update, validateMW, controller.updateC
  *       '404':
  *         description: Child not found
  */
-router.delete("/childern", childValidation.delete, validateMW, controller.deleteChild);
+router.delete("/childern",auth.isAdmin, childValidation.delete, validateMW, controller.deleteChild);
 
 module.exports = router;

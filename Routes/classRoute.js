@@ -1,25 +1,4 @@
-// const express = require("express");
-// const router = express.Router();
-// const controller = require("./../Controller/classController");
-// const validateMW = require("./../Core/validations/validateMW");
-// const classValidation = require("../Core/validations/classValidation");
 
-// router
-//     .route("/classes")
-//     .get(controller.getAllClasses)
-//     .post(classValidation.post,validateMW,controller.addClass)
-//     .patch(classValidation.update,validateMW,controller.updateClass)
-//     .delete(classValidation.delete,validateMW,controller.deleteClass);
-
-//     router.get("/classes/childern/:id",classValidation.getByIdValidator,validateMW, controller.getAllClassChildren);
-//     router.route("/classes/teachers/:id")
-//   .get(classValidation.getByIdValidator,validateMW, controller.getAllClassSupervisorInfo);
-
-//   router.route("/classes/:id")
-//   .get(classValidation.getByIdValidator,validateMW, controller.getClassById)
-//   //.delete(deleteValidator, validationResult, controller.deleteClassById);
-// module.exports = router;
-////////////////////////////////////////////////////////////
 
 /**
  * @swagger
@@ -31,8 +10,8 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("./../Controller/classController");
-const validateMW = require("./../Core/validations/validateMW");
-const classValidation = require("../Core/validations/classValidation");
+const validateMW = require("./../validations/validateMW");
+const classValidation = require("../validations/classValidation");
 
 /**
  * @swagger

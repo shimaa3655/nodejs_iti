@@ -17,14 +17,13 @@ exports.getAllteachers=(request,response)=>{
 
 exports.addteacher = async (request, response, next) => {
     try {
-        const { _id, fullName, email, password } = request.body;
+        const { fullName, email, password } = request.body;
         const hashedPassword = bcrypt.hashSync(password, 10);
         const teacher = new teachreSchema({
-            _id,
             fullName,
             email,
             password: hashedPassword,
-            image:request.file.path
+            image: request.file.path
         });
 
         const savedTeacher = await teacher.save();
@@ -93,23 +92,39 @@ exports.updateteacher = async (request, response, next) => {
     }
 };
 
-exports.deleteteacher=(request,response,next)=>{
-    teachreSchema.deleteOne({
-        _id:request.body.id
-    }).then(data=>{
-        response.status(200).json({data});
-    })
-    .catch(error=>next(error));
-}
+// exports.deleteteacher=(request,response,next)=>{
+//     teachreSchema.deleteOne({
+//         _id:request.params.id
+//     }).then(data=>{
+//         response.status(200).json({data});
+//     })
+//     .catch(error=>next(error));
+// }
 
+exports.deleteteacher = async (request, response, next) => {
+    try {
+        const teacherId = request.params.id;
+         console.log(teacherId);
+        // Find all classes where the teacher is a supervisor
+        const classes = await classSchema.find({ supervisor: teacherId });
 
+        // Remove the teacher from the supervisor field in each class
+        await Promise.all(classes.map(async (classObj) => {
+            classObj.supervisor = null; // Or remove the teacher ID from the array if it's an array field
+            await classObj.save();
+        }));
 
-exports.getSupervisors = (request, response, next) => {
-    classSchema.find({})
-        .populate({ path: 'supervisor', select: 'fullName' })
-        .then(classes => {
-            const supervisors = classes.map(classObject => classObject.supervisor);
-            response.status(200).json({ supervisors: supervisors, message: "All supervisors in classes" });
-        })
-        .catch(error => next(error));
+        // Delete the teacher
+        const result = await teachreSchema.deleteOne({ _id: teacherId });
+        if (result.deletedCount === 0) {
+            throw new Error("Teacher not found.");
+        }
+
+        response.status(200).json({ message: "Teacher deleted successfully" });
+    } catch (error) {
+        next(error);
+    }
 };
+
+
+

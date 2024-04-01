@@ -56,6 +56,7 @@ exports.deleteClass=(request,response,next)=>{
     .catch(error=>next(error))
 }
 
+
 exports.getAllClassChildren = (req, res, next) => {
     const classId = req.params.id;
 

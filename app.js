@@ -63,7 +63,7 @@ const options = {
         bearerAuth: [],
       }],
     },
-    // Specify the paths to your route files containing Swagger annotations
+    
     apis: ['./Routes/*.js'],
   };
   

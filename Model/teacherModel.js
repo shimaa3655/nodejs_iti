@@ -2,10 +2,10 @@ const mongoose=require("mongoose");
 
 // Create Schema object
 const schema=new mongoose.Schema({
-    _id: {
-        type: mongoose.Schema.Types.ObjectId, 
-       //auto: true // Automatically generate ObjectId
-    },
+    // _id: {
+    //     type: mongoose.Schema.Types.ObjectId, 
+       
+    // },
     fullName:String,
     email:{
         type: String,

@@ -3,8 +3,8 @@ const express = require("express");
 const router = express.Router();
 const auth = require('../Middleware/auth');
 const controller = require("./../Controller/teacherController");
-const validateMW = require("./../Core/validations/validateMW");
-const teacherValidation = require("../Core/validations/teacherValidation");
+const validateMW = require("./../validations/validateMW");
+const teacherValidation = require("../validations/teacherValidation");
 const multer = require("multer");//pic
 const path = require("path");//built in backage in node 
 
@@ -17,7 +17,7 @@ const upload = multer({
             let ext = path.extname(file.originalname);
             let fileName = path.basename(file.originalname, ext);
             let finalName =  file.fieldname + '-' + fileName + '-' + Date.now() + ext
-            cb(null, finalName);
+            cb(null,finalName);
         }
     }),
     fileFilter: (request, file, cb) => {
@@ -63,8 +63,6 @@ router.get("/teachers",auth.checkAdminOrTeacher, controller.getAllteachers);
  *           schema:
  *             type: object
  *             properties:
- *               _id:
- *                 type: mongoose.Schema.Types.ObjectId
  *               fullName:
  *                 type: string
  *               email:
@@ -186,17 +184,6 @@ router.patch("/teachers/:id", auth.isAdmin, upload.single('image'), teacherValid
  */
 router.delete("/teachers/:id", auth.isAdmin, teacherValidation.delete, validateMW, controller.deleteteacher);
 
-/**
- * @swagger
- * /teachers/supervisors:
- *   get:
- *     summary: Get supervisors
- *     description: Retrieve a list of supervisors.
- *     tags: [Teachers]
- *     responses:
- *       '200':
- *         description: A list of supervisors
- */
-router.get("/teachers/supervisors", controller.getSupervisors);
+
 
 module.exports = router;

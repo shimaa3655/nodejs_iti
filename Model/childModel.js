@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const AutoIncrement = require('mongoose-sequence')(mongoose);
-//  jjjjj
 const addressSchema = new mongoose.Schema(
     {
         city: String,
@@ -20,7 +19,7 @@ const schema = new mongoose.Schema({
 schema.plugin(AutoIncrement, 
     { 
         id: 'child_model_id_counter',
-        inc_field: '_id' //which field in your schema will receive the auto-incremented values. 
+        inc_field: '_id'  
     
     });
 module.exports=mongoose.model("childern", schema);
